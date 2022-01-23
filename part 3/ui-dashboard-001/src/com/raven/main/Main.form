@@ -47,13 +47,20 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="menu" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="header2" pref="965" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                          <Component id="mainPanel" max="32767" attributes="0"/>
+                          <Component id="mainPanel" pref="947" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="header1" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jlblMinimize" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                          <Component id="jlblClose" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -61,7 +68,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="menu" pref="657" max="32767" attributes="0"/>
               <Group type="102" attributes="0">
-                  <Component id="header2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="header1" min="-2" max="-2" attributes="0"/>
+                      <Component id="jlblClose" min="-2" pref="43" max="-2" attributes="0"/>
+                      <Component id="jlblMinimize" min="-2" pref="43" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="mainPanel" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -72,13 +83,6 @@
       <SubComponents>
         <Component class="com.raven.component.Menu" name="menu">
         </Component>
-        <Component class="com.raven.component.Header" name="header2">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="sansserif" size="14" style="0"/>
-            </Property>
-          </Properties>
-        </Component>
         <Container class="javax.swing.JPanel" name="mainPanel">
           <Properties>
             <Property name="opaque" type="boolean" value="false"/>
@@ -86,6 +90,33 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
         </Container>
+        <Component class="com.raven.component.Header" name="header1">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ef" green="ef" red="f1" type="rgb"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jlblClose">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/com/raven/icon/close.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jlblCloseMousePressed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jlblMinimize">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/com/raven/icon/minimize.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jlblMinimizeMousePressed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
