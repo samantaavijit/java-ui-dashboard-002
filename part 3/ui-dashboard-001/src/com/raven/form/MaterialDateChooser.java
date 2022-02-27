@@ -47,7 +47,6 @@ public class MaterialDateChooser extends JDateChooser {
     public MaterialDateChooser() {
         setBorder(new EmptyBorder(20, 3, 10, 3));
         setBackground(new Color(242, 242, 242));
-        //setSelectionColor(new Color(76, 204, 255));
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -130,7 +129,7 @@ public class MaterialDateChooser extends JDateChooser {
         g2.setColor(lineColor);
         FontMetrics ft = g2.getFontMetrics();
         Rectangle2D r2 = ft.getStringBounds(labelText, g2);
-        double height = getHeight() - in.top - in.bottom - 10; // -10 for additional space
+        double height = getHeight() - in.top - in.bottom - 20; // -10 for additional space
         double textY = (height - r2.getHeight()) / 2;
         double size;
         if (animateHintText) {

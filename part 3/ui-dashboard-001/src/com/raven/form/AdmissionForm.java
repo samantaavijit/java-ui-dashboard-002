@@ -5,15 +5,28 @@
  */
 package com.raven.form;
 
+import com.toedter.calendar.JDateChooser;
+import java.awt.Image;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author Avijit
  */
 public class AdmissionForm extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Form_1
-     */
+    JDateChooser dateChooser = new JDateChooser();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    final JComponent[] inputs = new JComponent[]{
+        dateChooser
+    };
+
     public AdmissionForm() {
         initComponents();
     }
@@ -35,8 +48,10 @@ public class AdmissionForm extends javax.swing.JPanel {
         impMotherName = new com.raven.form.MaterialTextInput();
         inpPresentAddress = new com.raven.form.MaterialTextInput();
         inpPermanentAddress = new com.raven.form.MaterialTextInput();
-        jLabel1 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        inpDOB = new com.raven.form.MaterialTextInput();
+        jLblPhotoPreview = new javax.swing.JLabel();
+        jBtnCamera = new javax.swing.JButton();
+        jBtnFile = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(242, 242, 242));
 
@@ -45,12 +60,15 @@ public class AdmissionForm extends javax.swing.JPanel {
         jlblFormName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jlblFormName.setText("Admission Form");
 
+        inpCourseName.setToolTipText("Enter your course name");
         inpCourseName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inpCourseName.setLabelText("Course Name");
 
+        inpBranch.setToolTipText("Enter your branch name");
         inpBranch.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inpBranch.setLabelText("Branch");
 
+        inpName.setToolTipText("Enter your name");
         inpName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inpName.setLabelText("Name of the Student");
 
@@ -63,14 +81,33 @@ public class AdmissionForm extends javax.swing.JPanel {
         inpPresentAddress.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inpPresentAddress.setLabelText("Present Address");
 
-        inpPermanentAddress.setEditable(false);
         inpPermanentAddress.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inpPermanentAddress.setLabelText("Permanent Address");
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/profile.png"))); // NOI18N
-        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jLabel1.setIconTextGap(0);
+        inpDOB.setEditable(false);
+        inpDOB.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        inpDOB.setLabelText("Date of Birth");
+        inpDOB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inpDOBMouseClicked(evt);
+            }
+        });
+
+        jLblPhotoPreview.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/profile.png"))); // NOI18N
+        jLblPhotoPreview.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jLblPhotoPreview.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLblPhotoPreview.setIconTextGap(0);
+
+        jBtnCamera.setBackground(java.awt.Color.cyan);
+        jBtnCamera.setText("Camera");
+
+        jBtnFile.setBackground(java.awt.Color.cyan);
+        jBtnFile.setText("File");
+        jBtnFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnFileActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -84,6 +121,7 @@ public class AdmissionForm extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inpDOB, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
                             .addComponent(inpPermanentAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(inpPresentAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(impMotherName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -93,14 +131,17 @@ public class AdmissionForm extends javax.swing.JPanel {
                                 .addComponent(inpBranch, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(inpName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(inpFatherName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(150, 150, 150)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(150, 150, 150)
+                                .addComponent(jLblPhotoPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jBtnCamera)
+                                .addGap(18, 18, 18)
+                                .addComponent(jBtnFile)))
                         .addGap(0, 23, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(277, 277, 277)
-                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,40 +149,77 @@ public class AdmissionForm extends javax.swing.JPanel {
                 .addGap(5, 5, 5)
                 .addComponent(jlblFormName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(inpCourseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(inpBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inpName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(inpFatherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(impMotherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(inpPresentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(inpPermanentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(96, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpFatherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(impMotherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpPresentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpPermanentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inpDOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(188, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLblPhotoPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jBtnCamera)
+                            .addComponent(jBtnFile))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-   
-    
+    private void inpDOBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpDOBMouseClicked
+        int result = JOptionPane.showConfirmDialog(null, inputs, "Choose Your Date of birth", JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            if (dateChooser != null) {
+                String date = sdf.format(dateChooser.getDate());
+                inpDOB.setText(date);
+            }
+        }
+    }//GEN-LAST:event_inpDOBMouseClicked
+
+    private void jBtnFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnFileActionPerformed
+        JFileChooser jFileChooser = new JFileChooser();
+        FileNameExtensionFilter filer = new FileNameExtensionFilter("IMAGES", "png", "jpg", "jpeg");
+        jFileChooser.addChoosableFileFilter(filer);
+
+        int result = jFileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File imageFile = jFileChooser.getSelectedFile();
+            String imagePath = imageFile.getAbsolutePath();
+            if (imagePath != null) {
+                ImageIcon imageIcon = new ImageIcon(imagePath);
+                if (imageIcon != null) {
+                    Image profileImage = imageIcon.getImage().getScaledInstance(jLblPhotoPreview.getWidth(),
+                            jLblPhotoPreview.getHeight(), Image.SCALE_SMOOTH);
+                    jLblPhotoPreview.setIcon(new ImageIcon(profileImage));
+                }
+            }
+        }
+    }//GEN-LAST:event_jBtnFileActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.form.MaterialTextInput impMotherName;
     private com.raven.form.MaterialTextInput inpBranch;
     private com.raven.form.MaterialTextInput inpCourseName;
+    private com.raven.form.MaterialTextInput inpDOB;
     private com.raven.form.MaterialTextInput inpFatherName;
     private com.raven.form.MaterialTextInput inpName;
     private com.raven.form.MaterialTextInput inpPermanentAddress;
     private com.raven.form.MaterialTextInput inpPresentAddress;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jBtnCamera;
+    private javax.swing.JButton jBtnFile;
+    private javax.swing.JLabel jLblPhotoPreview;
     private javax.swing.JLabel jlblFormName;
     // End of variables declaration//GEN-END:variables
 }
