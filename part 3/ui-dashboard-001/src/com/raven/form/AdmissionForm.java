@@ -6,6 +6,7 @@
 package com.raven.form;
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -26,6 +27,13 @@ public class AdmissionForm extends javax.swing.JPanel {
     final JComponent[] inputs = new JComponent[]{
         dateChooser
     };
+    private String courseName, branchName, studentName, fatherName, motherName,
+            presentAddress, permanentAddress, dateOfBirth, bloodGroup, contactNo, nationality;
+
+    private static final Color ERROR_COLOR = Color.RED;
+    private static final Color SUCCESS_COLOR = new Color(3, 155, 216);
+
+    private boolean isError = false;
 
     public AdmissionForm() {
         initComponents();
@@ -45,13 +53,17 @@ public class AdmissionForm extends javax.swing.JPanel {
         inpBranch = new com.raven.form.MaterialTextInput();
         inpName = new com.raven.form.MaterialTextInput();
         inpFatherName = new com.raven.form.MaterialTextInput();
-        impMotherName = new com.raven.form.MaterialTextInput();
+        inpMotherName = new com.raven.form.MaterialTextInput();
         inpPresentAddress = new com.raven.form.MaterialTextInput();
         inpPermanentAddress = new com.raven.form.MaterialTextInput();
         inpDOB = new com.raven.form.MaterialTextInput();
         jLblPhotoPreview = new javax.swing.JLabel();
         jBtnCamera = new javax.swing.JButton();
         jBtnFile = new javax.swing.JButton();
+        inpNationality = new com.raven.form.MaterialTextInput();
+        inpContactNo = new com.raven.form.MaterialTextInput();
+        cmbBloodGroup = new com.raven.form.MaterialComboBox();
+        jBtnSave = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(242, 242, 242));
 
@@ -75,8 +87,8 @@ public class AdmissionForm extends javax.swing.JPanel {
         inpFatherName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inpFatherName.setLabelText("Father's / Husband's Name");
 
-        impMotherName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        impMotherName.setLabelText("Mother's Name");
+        inpMotherName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        inpMotherName.setLabelText("Mother's Name");
 
         inpPresentAddress.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inpPresentAddress.setLabelText("Present Address");
@@ -109,6 +121,26 @@ public class AdmissionForm extends javax.swing.JPanel {
             }
         });
 
+        inpNationality.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        inpNationality.setLabelText("Nationality");
+
+        inpContactNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        inpContactNo.setLabelText("Contact Number");
+
+        cmbBloodGroup.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-" }));
+        cmbBloodGroup.setSelectedIndex(-1);
+        cmbBloodGroup.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cmbBloodGroup.setLabelText("Blood Group");
+
+        jBtnSave.setBackground(java.awt.Color.green);
+        jBtnSave.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jBtnSave.setText("SAVE");
+        jBtnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnSaveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,27 +153,38 @@ public class AdmissionForm extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(inpDOB, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
                             .addComponent(inpPermanentAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(inpPresentAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(impMotherName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(inpMotherName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(inpCourseName, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                                 .addComponent(inpBranch, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(inpName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(inpFatherName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(inpFatherName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(inpContactNo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(150, 150, 150)
+                                    .addComponent(jLblPhotoPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jBtnCamera)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jBtnFile)))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(150, 150, 150)
-                                .addComponent(jLblPhotoPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBtnCamera)
-                                .addGap(18, 18, 18)
-                                .addComponent(jBtnFile)))
-                        .addGap(0, 23, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(inpDOB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(inpNationality, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbBloodGroup, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE))))
+                        .addGap(0, 19, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jBtnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(362, 362, 362))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,37 +193,45 @@ public class AdmissionForm extends javax.swing.JPanel {
                 .addComponent(jlblFormName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(inpCourseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(inpBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpFatherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(impMotherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpPresentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpPermanentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inpDOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(188, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLblPhotoPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jBtnCamera)
                             .addComponent(jBtnFile))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(inpCourseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inpBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addComponent(inpName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(inpFatherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(inpMotherName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(inpPresentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inpDOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(inpPermanentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbBloodGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(inpNationality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inpContactNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                        .addComponent(jBtnSave)
+                        .addGap(89, 89, 89))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void inpDOBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inpDOBMouseClicked
         int result = JOptionPane.showConfirmDialog(null, inputs, "Choose Your Date of birth", JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
-            if (dateChooser != null) {
+            if (dateChooser != null && dateChooser.getDate() != null) {
                 String date = sdf.format(dateChooser.getDate());
                 inpDOB.setText(date);
             }
@@ -207,18 +258,119 @@ public class AdmissionForm extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jBtnFileActionPerformed
 
+    private void jBtnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSaveActionPerformed
+        isError = false;
+        inpCourseName.setLineColor(SUCCESS_COLOR);
+        inpBranch.setLineColor(SUCCESS_COLOR);
+        inpName.setLineColor(SUCCESS_COLOR);
+        inpFatherName.setLineColor(SUCCESS_COLOR);
+        inpMotherName.setLineColor(SUCCESS_COLOR);
+        inpPresentAddress.setLineColor(SUCCESS_COLOR);
+        inpPermanentAddress.setLineColor(SUCCESS_COLOR);
+        inpDOB.setLineColor(SUCCESS_COLOR);
+        inpContactNo.setLineColor(SUCCESS_COLOR);
+        inpNationality.setLineColor(SUCCESS_COLOR);
+
+        courseName = inpCourseName.getText();
+        branchName = inpBranch.getText();
+        studentName = inpName.getText();
+        fatherName = inpFatherName.getText();
+        motherName = inpMotherName.getText();
+        presentAddress = inpPresentAddress.getText();
+        permanentAddress = inpPermanentAddress.getText();
+        dateOfBirth = inpDOB.getText();
+        contactNo = inpContactNo.getText();
+        nationality = inpNationality.getText();
+
+        if (null == courseName || courseName.equalsIgnoreCase("")) {
+            inpCourseName.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == branchName || branchName.equalsIgnoreCase("")) {
+            inpBranch.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == studentName || studentName.equalsIgnoreCase("")) {
+            inpName.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == fatherName || fatherName.equalsIgnoreCase("")) {
+            inpFatherName.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == motherName || motherName.equalsIgnoreCase("")) {
+            inpMotherName.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == presentAddress || presentAddress.equalsIgnoreCase("")) {
+            inpPresentAddress.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == permanentAddress || permanentAddress.equalsIgnoreCase("")) {
+            inpPermanentAddress.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == dateOfBirth || dateOfBirth.equalsIgnoreCase("")) {
+            inpDOB.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == contactNo || contactNo.equalsIgnoreCase("")) {
+            inpContactNo.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        if (null == nationality || nationality.equalsIgnoreCase("")) {
+            inpNationality.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        }
+
+        System.out.println(isError);
+    }//GEN-LAST:event_jBtnSaveActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.raven.form.MaterialTextInput impMotherName;
+    private com.raven.form.MaterialComboBox cmbBloodGroup;
     private com.raven.form.MaterialTextInput inpBranch;
+    private com.raven.form.MaterialTextInput inpContactNo;
     private com.raven.form.MaterialTextInput inpCourseName;
     private com.raven.form.MaterialTextInput inpDOB;
     private com.raven.form.MaterialTextInput inpFatherName;
+    private com.raven.form.MaterialTextInput inpMotherName;
     private com.raven.form.MaterialTextInput inpName;
+    private com.raven.form.MaterialTextInput inpNationality;
     private com.raven.form.MaterialTextInput inpPermanentAddress;
     private com.raven.form.MaterialTextInput inpPresentAddress;
     private javax.swing.JButton jBtnCamera;
     private javax.swing.JButton jBtnFile;
+    private javax.swing.JButton jBtnSave;
     private javax.swing.JLabel jLblPhotoPreview;
     private javax.swing.JLabel jlblFormName;
     // End of variables declaration//GEN-END:variables

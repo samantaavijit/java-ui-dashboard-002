@@ -41,6 +41,7 @@ public class MaterialTextInput extends JTextField {
     
     public void setLineColor(Color lineColor) {
         this.lineColor = lineColor;
+        repaint();
     }
     
     public MaterialTextInput() {
@@ -114,7 +115,8 @@ public class MaterialTextInput extends JTextField {
         if (isMouseOver) {
             g2.setColor(new Color(250, 2, 229));
         } else {
-            g2.setColor(new Color(150, 150, 150));
+            //g2.setColor(new Color(150, 150, 150));
+            g2.setColor(lineColor);
         }
         g2.fillRect(2, height - 1, width - 4, 1);
         createHintText(g2);
