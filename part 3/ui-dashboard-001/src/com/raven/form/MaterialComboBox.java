@@ -52,6 +52,7 @@ public class MaterialComboBox<E> extends JComboBox<E> {
 
     public void setLineColor(Color lineColor) {
         this.lineColor = lineColor;
+        repaint();
     }
 
     public MaterialComboBox() {
@@ -80,7 +81,7 @@ public class MaterialComboBox<E> extends JComboBox<E> {
         private float location;
         private boolean show;
         private boolean animateHintText = false;
-        private MaterialComboBox combo;
+        private final MaterialComboBox combo;
 
         public ComboUI(MaterialComboBox combo) {
             this.combo = combo;
@@ -201,7 +202,8 @@ public class MaterialComboBox<E> extends JComboBox<E> {
             if (isMouseOver) {
                 g2.setColor(new Color(250, 2, 229));
             } else {
-                g2.setColor(new Color(150, 150, 150));
+                //g2.setColor(new Color(150, 150, 150));
+                g2.setColor(lineColor);
             }
             g2.fillRect(2, height - 1, width - 4, 1);
             createHintText(g2);

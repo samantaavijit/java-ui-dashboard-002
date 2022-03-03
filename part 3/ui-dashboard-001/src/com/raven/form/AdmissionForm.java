@@ -6,9 +6,12 @@
 package com.raven.form;
 
 import com.toedter.calendar.JDateChooser;
+import helper.DbHelper;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -29,6 +32,7 @@ public class AdmissionForm extends javax.swing.JPanel {
     };
     private String courseName, branchName, studentName, fatherName, motherName,
             presentAddress, permanentAddress, dateOfBirth, bloodGroup, contactNo, nationality;
+    private String imagePath = null;
 
     private static final Color ERROR_COLOR = Color.RED;
     private static final Color SUCCESS_COLOR = new Color(3, 155, 216);
@@ -214,10 +218,13 @@ public class AdmissionForm extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(inpPresentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(inpDOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, 0)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(inpPermanentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbBloodGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, 0)
+                                .addComponent(inpPermanentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, 0)
+                                .addComponent(cmbBloodGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, 0)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(inpNationality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -246,7 +253,7 @@ public class AdmissionForm extends javax.swing.JPanel {
         int result = jFileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File imageFile = jFileChooser.getSelectedFile();
-            String imagePath = imageFile.getAbsolutePath();
+            imagePath = imageFile.getAbsolutePath();
             if (imagePath != null) {
                 ImageIcon imageIcon = new ImageIcon(imagePath);
                 if (imageIcon != null) {
@@ -270,6 +277,7 @@ public class AdmissionForm extends javax.swing.JPanel {
         inpDOB.setLineColor(SUCCESS_COLOR);
         inpContactNo.setLineColor(SUCCESS_COLOR);
         inpNationality.setLineColor(SUCCESS_COLOR);
+        cmbBloodGroup.setLineColor(SUCCESS_COLOR);
 
         courseName = inpCourseName.getText();
         branchName = inpBranch.getText();
@@ -351,8 +359,18 @@ public class AdmissionForm extends javax.swing.JPanel {
                 isError = true;
             }
         }
+        Object selectedItem = cmbBloodGroup.getSelectedItem();
+        if (selectedItem == null) {
+            cmbBloodGroup.setLineColor(ERROR_COLOR);
+            if (!isError) {
+                isError = true;
+            }
+        } else {
+            bloodGroup = selectedItem.toString();
+        }
 
-        System.out.println(isError);
+        if (!isError)
+            saveData();
     }//GEN-LAST:event_jBtnSaveActionPerformed
 
 
@@ -374,4 +392,56 @@ public class AdmissionForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLblPhotoPreview;
     private javax.swing.JLabel jlblFormName;
     // End of variables declaration//GEN-END:variables
+
+    private void saveData() {
+        try {
+            Connection con = DbHelper.connect();
+            PreparedStatement statement = con.prepareStatement("INSERT INTO students (uid,course_name,branch,name,"
+                    + "fathers_name,mothers_name,present_address,permanent_address,dob,blood,"
+                    + "contact_no,nationality,image,qualification) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            statement.setString(1, String.valueOf(timestamp.getTime()));
+            statement.setString(2, courseName);
+            statement.setString(3, branchName);
+            statement.setString(4, studentName);
+            statement.setString(5, fatherName);
+            statement.setString(6, motherName);
+            statement.setString(7, presentAddress);
+            statement.setString(8, permanentAddress);
+            statement.setString(9, dateOfBirth);
+            statement.setString(10, bloodGroup);
+            statement.setString(11, contactNo);
+            statement.setString(12, nationality);
+            statement.setString(13, "");
+            statement.setString(14, "");
+
+            if (statement.executeUpdate() > 0) {
+                con.commit();
+                JOptionPane.showMessageDialog(null, "Recorded added successfully");
+                clearField();
+            } else {
+                JOptionPane.showMessageDialog(null, "Something wrong!! please try again");
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+
+    private void clearField() {
+        inpCourseName.setText("");
+        inpBranch.setText("");
+        inpName.setText("");
+        inpFatherName.setText("");
+        inpMotherName.setText("");
+        inpPermanentAddress.setText("");
+        inpPresentAddress.setText("");
+        inpDOB.setText("");
+        cmbBloodGroup.setSelectedIndex(-1);
+        inpContactNo.setText("");
+        inpNationality.setText("");
+        jLblPhotoPreview.setIcon(null);
+        dateChooser.setDate(null);
+    }
 }
