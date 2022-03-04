@@ -6,7 +6,6 @@ import com.toedter.calendar.JDateChooser;
 import helper.DbHelper;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +14,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -441,7 +439,8 @@ public class AdmissionForm extends javax.swing.JPanel {
             statement.setString(12, nationality);
             statement.setString(13, outputImageName);
             statement.setString(14, "");
-
+            
+            statement.close();
             con.commit();
             if (statement.executeUpdate() > 0) {
                 Notification noti = new Notification(Main.getJFrame(), Notification.Type.SUCCESS,
@@ -479,7 +478,7 @@ public class AdmissionForm extends javax.swing.JPanel {
         dateChooser.setDate(null);
     }
 
-    private static boolean uploadImage(String src, String dest) {
+    private boolean uploadImage(String src, String dest) {
         try {
             Path sourceDirectory = Paths.get(src);
             Path targetDirectory = Paths.get(dest);

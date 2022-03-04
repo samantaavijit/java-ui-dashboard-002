@@ -1,17 +1,29 @@
 package com.raven.form;
 
+import com.raven.main.Main;
+import com.raven.model.ModelStudent;
 import com.raven.model.Model_Card;
 import com.raven.model.StatusType;
+import com.raven.swing.Notification;
 import com.raven.swing.ScrollBar;
+import helper.DbHelper;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class Form_Home extends javax.swing.JPanel {
 
+    private final ArrayList<ModelStudent> studentList = new ArrayList<>();
+
     public Form_Home() {
         initComponents();
+        getStudentData();
         card1.setData(new Model_Card(new ImageIcon(getClass().getResource("/com/raven/icon/stock.png")), "Stock Total", "$200000", "Increased by 60%"));
         card2.setData(new Model_Card(new ImageIcon(getClass().getResource("/com/raven/icon/profit.png")), "Total Profit", "$15000", "Increased by 25%"));
         card3.setData(new Model_Card(new ImageIcon(getClass().getResource("/com/raven/icon/flag.png")), "Unique Visitors", "$300000", "Increased by 70%"));
@@ -149,4 +161,41 @@ public class Form_Home extends javax.swing.JPanel {
     private javax.swing.JScrollPane spTable;
     private com.raven.swing.Table table;
     // End of variables declaration//GEN-END:variables
+
+    private void getStudentData() {
+        try {
+            Connection con = DbHelper.connect();
+            PreparedStatement statement = con.prepareStatement("SELECT * FROM students");
+            ResultSet resultSet = statement.executeQuery();
+            
+            while (resultSet.next()) {
+                String uid = resultSet.getString("uid");
+                String course_name = resultSet.getString("course_name");
+                String branch = resultSet.getString("branch");
+                String name = resultSet.getString("name");
+                String fathers_name = resultSet.getString("fathers_name");
+                String mothers_name = resultSet.getString("mothers_name");
+                String present_address = resultSet.getString("present_address");
+                String permanent_address = resultSet.getString("permanent_address");
+                String dob = resultSet.getString("dob");
+                String blood = resultSet.getString("blood");
+                String contact_no = resultSet.getString("contact_no");
+                String nationality = resultSet.getString("nationality");
+                String image = resultSet.getString("image");
+                String qualification = resultSet.getString("qualification");
+                String admission = resultSet.getString("admission");
+
+                ModelStudent student = new ModelStudent(uid, course_name, branch, name, fathers_name, mothers_name, present_address, permanent_address,
+                        dob, blood, contact_no, nationality, new ImageIcon(image), qualification, admission);
+                studentList.add(student);
+            }
+            for (ModelStudent stu : studentList) {
+                System.out.println(stu.toString());
+            }
+        } catch (SQLException ex) {
+            Notification notification = new Notification(Main.getJFrame(), Notification.Type.WARNING,
+                    Notification.Location.TOP_CENTER, "Something wrong try again");
+            notification.showNotification();
+        }
+    }
 }
