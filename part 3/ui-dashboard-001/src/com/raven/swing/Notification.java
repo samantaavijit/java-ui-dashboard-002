@@ -47,7 +47,7 @@ public class Notification extends javax.swing.JComponent {
         dialog.setSize(getPreferredSize());
         switch (type) {
             case SUCCESS:
-                lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/sucess.png")));
+                lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/success.png")));
                 lbMessage.setText("Success");
                 break;
             case INFO:

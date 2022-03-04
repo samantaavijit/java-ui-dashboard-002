@@ -25,6 +25,10 @@ public class DbHelper {
             if (!f.exists()) {
                 f.mkdir();
             }
+            File profilImage = new File(dbDir + "/Profiles");
+            if (!profilImage.exists()) {
+                profilImage.mkdir();
+            }
             String dbPath = dbDir + "/" + dbName;
             File dbFile = new File(dbPath);
             if (!dbFile.exists()) { // WHEN USER INSTALL IT WILL CREATE THE DATABASE 
