@@ -5,14 +5,23 @@
  */
 package com.raven.form;
 
+import com.raven.main.Main;
+import com.raven.swing.Notification;
 import com.toedter.calendar.JDateChooser;
 import helper.DbHelper;
 import java.awt.Color;
 import java.awt.Image;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -32,7 +41,7 @@ public class AdmissionForm extends javax.swing.JPanel {
     };
     private String courseName, branchName, studentName, fatherName, motherName,
             presentAddress, permanentAddress, dateOfBirth, bloodGroup, contactNo, nationality;
-    private String imagePath = null;
+    private String imageFileName = null;
 
     private static final Color ERROR_COLOR = Color.RED;
     private static final Color SUCCESS_COLOR = new Color(3, 155, 216);
@@ -253,9 +262,9 @@ public class AdmissionForm extends javax.swing.JPanel {
         int result = jFileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File imageFile = jFileChooser.getSelectedFile();
-            imagePath = imageFile.getAbsolutePath();
-            if (imagePath != null) {
-                ImageIcon imageIcon = new ImageIcon(imagePath);
+            imageFileName = imageFile.getAbsolutePath();
+            if (imageFileName != null) {
+                ImageIcon imageIcon = new ImageIcon(imageFileName);
                 if (imageIcon != null) {
                     Image profileImage = imageIcon.getImage().getScaledInstance(jLblPhotoPreview.getWidth(),
                             jLblPhotoPreview.getHeight(), Image.SCALE_SMOOTH);
@@ -368,7 +377,8 @@ public class AdmissionForm extends javax.swing.JPanel {
         } else {
             bloodGroup = selectedItem.toString();
         }
-
+        Notification noti = new Notification(Main.getJFrame(), Notification.Type.INFO, Notification.Location.TOP_RIGHT, "");
+        noti.showNotification();
         if (!isError)
             saveData();
     }//GEN-LAST:event_jBtnSaveActionPerformed
@@ -444,4 +454,21 @@ public class AdmissionForm extends javax.swing.JPanel {
         jLblPhotoPreview.setIcon(null);
         dateChooser.setDate(null);
     }
+
+    private static void uploadImage(String src, File dest) throws IOException {
+        try {
+            File image = new File(src);
+            FileInputStream fis = new FileInputStream(image);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+
+            for (int readNum; (readNum = fis.read(buffer)) != -1;) {
+
+            }
+
+        } catch (Exception e) {
+        }
+
+    }
+
 }

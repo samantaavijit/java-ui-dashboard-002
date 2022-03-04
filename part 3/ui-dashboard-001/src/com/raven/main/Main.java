@@ -1,16 +1,17 @@
 package com.raven.main;
 
-import com.raven.event.EventMenuSelected;
 import com.raven.form.AdmissionForm;
 import com.raven.form.Form_1;
 import com.raven.form.Form_2;
 import com.raven.form.Form_3;
 import com.raven.form.Form_Home;
+import com.raven.swing.Notification;
 import java.awt.Color;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 
 public class Main extends javax.swing.JFrame {
-    
+
     private Form_Home home;
     private Form_1 form1;
     private Form_2 form2;
@@ -24,7 +25,7 @@ public class Main extends javax.swing.JFrame {
         form1 = new Form_1();
         form2 = new Form_2();
         form3 = new Form_3();
-        admissionForm=new AdmissionForm();
+        admissionForm = new AdmissionForm();
         menu.initMoving(Main.this);
         menu.addEventMenuSelected((int index) -> {
             switch (index) {
@@ -47,13 +48,14 @@ public class Main extends javax.swing.JFrame {
         //  set when system open start with home form
         setForm(new Form_Home());
     }
-    
+
     private void setForm(JComponent component) {
         mainPanel.removeAll();
         mainPanel.add(component);
         mainPanel.repaint();
         mainPanel.revalidate();
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -161,12 +163,13 @@ public class Main extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new Main().setVisible(true);
+            frame = new Main();
+            frame.setVisible(true);
         });
     }
 
@@ -178,4 +181,9 @@ public class Main extends javax.swing.JFrame {
     private com.raven.component.Menu menu;
     private com.raven.swing.PanelBorder panelBorder1;
     // End of variables declaration//GEN-END:variables
+private static JFrame frame;
+
+    public static JFrame getJFrame() {
+        return frame;
+    }
 }
